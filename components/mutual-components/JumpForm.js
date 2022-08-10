@@ -38,13 +38,8 @@ export default function JumpForm() {
         }
         const tx = await runContractFunction({
             params: removeLiquidityOptions,
-            onError: (error) => {
-                console.log(error)
-                displayNotification("errory", "error")
-            },
-            onSuccess: () => {
-                displayNotification("success", "sucese")
-            },
+            onError: (error) => displayNotification(error.message, "error"),
+            onSuccess: () => displayNotification(`Removed ${removeAmount} LP shares`, "success"),
         })
         // const amountToApprove = data.data[0].inputResult
         // approveOptions.params = {
@@ -70,10 +65,7 @@ export default function JumpForm() {
         <div className="shadow-xl rounded-xl p-8 px-12">
             <Form
                 onSubmit={handleSubmit}
-                onChange={() => {
-                    // baked beans
-                    setAmountToRemove(null)
-                }}
+                onChange={() => setAmountToRemove(null)}
                 data={[
                     {
                         inputWidth: "250px",
@@ -84,7 +76,7 @@ export default function JumpForm() {
                         validation: { required: true },
                     },
                 ]}
-                title="Let's do a thing?"
+                title="Remove LP Shares"
             ></Form>
             <Button
                 text="Max"
@@ -98,9 +90,6 @@ export default function JumpForm() {
                     fontSize: "1rem",
                 }}
             ></Button>
-            <div className="LP-Shares">
-                Your LP Shares: <span className="font-semibold">idk</span>
-            </div>
         </div>
     )
 }

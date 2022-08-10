@@ -1,5 +1,3 @@
-import Head from "next/head"
-import Image from "next/image"
 import styles from "../styles/Home.module.css"
 import { Form, useNotification, Button } from "web3uikit"
 import { useMoralis, useWeb3Contract } from "react-moralis"
@@ -118,18 +116,21 @@ export default function Home() {
                         inputWidth: "50%",
                         value: "",
                         key: "nftAddress",
+                        validation: { required: true },
                     },
                     {
                         name: "Token ID",
                         type: "number",
                         value: "",
                         key: "tokenId",
+                        validation: { required: true },
                     },
                     {
                         name: "Price (in ETH)",
                         type: "number",
                         value: "",
                         key: "price",
+                        validation: { required: true },
                     },
                 ]}
                 title="Sell your NFT!"

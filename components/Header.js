@@ -16,7 +16,7 @@ export default function Header() {
                     <a className="mr-4 p-6">Sell NFT</a>
                 </Link>
                 <Link href="/nft">
-                    <a className="mr-4 p-6">buy my nft</a>
+                    <a className="mr-4 p-6">Marketplace</a>
                 </Link>
                 <ConnectButton moralisAuth={false} />
             </div>

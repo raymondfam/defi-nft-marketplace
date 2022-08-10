@@ -39,15 +39,16 @@ export default function MutualsStakeForm() {
         functionName: null,
     }
 
-    async function handleStakeSubmit(data) {
-        console.log({ data })
+    async function handleStakeSubmit() {
         const wethAmountToApprove = document.querySelector("#stake-form #input_0").value
+        if (wethAmountToApprove <= 0) return
+
         wethApproveOptions.params = {
             wad: ethers.utils.parseUnits(wethAmountToApprove, "ether").toString(),
             guy: mutualsAddress,
         }
 
-        const tx2 = await runContractFunction({
+        await runContractFunction({
             params: wethApproveOptions,
             onError: (error) => console.log(error),
         })
@@ -70,8 +71,6 @@ export default function MutualsStakeForm() {
             _amount0: formattedWETHAmount,
             _amount1: formattedACHAmount,
         }
-        console.log(stakeOptions, "sdjkask")
-        console.log("We are here now...")
         const tx = await runContractFunction({
             // abi: stakeOptions.abi,
             // contractAddress: stakeOptions.contractAddress,
@@ -79,7 +78,6 @@ export default function MutualsStakeForm() {
             params: stakeOptions,
             onError: (error) => console.log(error),
         })
-        console.log(`yo guys codelife here : ${tx}`)
         await tx.wait(1)
         console.log("Transaction has confirmed by 1 block")
     }

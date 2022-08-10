@@ -119,12 +119,12 @@ export default function Mint() {
                                 label: "5",
                             },
                         ],
-                        name: "Amount to mint (Max: 5)",
+                        name: "Amount to mint (5 per TX)",
                         type: "select",
                         value: "",
                     },
                 ]}
-                title="NFT MINT NOW!!"
+                title="Mint a Snowman NFT"
             ></Form>
         </div>
     )

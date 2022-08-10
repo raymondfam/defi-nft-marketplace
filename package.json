@@ -1,11 +1,10 @@
 {
-  "homepage": "http://raymondfam.github.io/defi-nft-marketplace",
+  "homepage": "https://raymondfam.github.io/defi-nft-marketplace",
   "name": "nextjs-nft-marketplace-fcc",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "export": "next export",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

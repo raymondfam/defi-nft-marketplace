@@ -6,7 +6,7 @@ import MutualsStakeForm from "../components/mutual-components/MutualsStakeForm"
 import JumpForm from "../components/mutual-components/JumpForm"
 import MutualsClaimForm from "../components/mutual-components/MutualsClaimForm"
 export default function Home() {
-    let styles = {
+    let styling = {
         gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
         width: "85vw",
     }
@@ -20,11 +20,11 @@ export default function Home() {
                 alignItems: "center",
             }}
         >
-            <div className="grid gap-12 pt-7" style={styles}>
+            <div className="grid gap-12 pt-7" style={styling}>
                 <MutualsSwapForm />
                 <MutualsStakeForm />
             </div>
-            <div className="grid gap-12" style={styles}>
+            <div className="grid gap-12" style={styling}>
                 <JumpForm />
                 <MutualsClaimForm />
             </div>

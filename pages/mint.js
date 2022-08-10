@@ -43,14 +43,12 @@ export default function Mint() {
             amount: cost,
         }
 
-        await runContractFunction({
+        const tx = await runContractFunction({
             params: approveOptions,
             onError: (error) => console.log(error),
-            onSuccess: () => {
-                console.log("suces")
-                mintNFT()
-            },
         })
+        await tx.wait(1)
+        mintNFT()
     }
 
     async function mintNFT() {

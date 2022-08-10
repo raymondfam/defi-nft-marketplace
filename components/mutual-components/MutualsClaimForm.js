@@ -62,7 +62,7 @@ export default function JumpForm() {
                 theme="primary"
                 style={{ padding: "8px", margin: "12px 0px" }}
                 onClick={handleSubmit}
-                // disabled={earned <= 0 ? true : false}
+                disabled={!Number(earned) ? true : false}
             ></Button>
             <p className=" text-lg">
                 Rewards Earned: <span className="font-semibold">{earned}</span>

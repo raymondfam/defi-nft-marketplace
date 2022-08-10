@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }) {
             <Head>
                 <title>NFT Marketplace</title>
                 <meta name="description" content="NFT Marketplace" />
-                <link rel="icon" href="defi-nft-marketplace/favicon.ico" />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
             <MoralisProvider initializeOnMount={false}>
                 <ApolloProvider client={client}>

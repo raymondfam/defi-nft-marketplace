@@ -1,18 +1,10 @@
 import { Form, useNotification } from "web3uikit"
 import { useWeb3Contract } from "react-moralis"
-import { ethers } from "ethers"
-
-import { nftAbi, achieverAbi } from "../constants"
-import networkMapping from "../constants/networkMapping.json"
+import { nftAbi, achieverAbi, nftAddress, achieverAddress } from "../constants"
 import { useEffect, useState } from "react"
 
 export default function Mint() {
     const { runContractFunction } = useWeb3Contract()
-
-    const chainString = "4"
-    const nftAddress = networkMapping[chainString].BasicNFT[0]
-    const achieverAddress = networkMapping[chainString]["Achiever"][0]
-
     const dispatch = useNotification()
 
     const approveOptions = {
@@ -88,7 +80,6 @@ export default function Mint() {
     async function handleChange(e) {
         let currentMintAmount = e.target.value
         let calculatedCost = await calculateCost(currentMintAmount)
-
         setCost(calculatedCost.toString())
         setMintAmount(currentMintAmount)
     }
@@ -96,7 +87,8 @@ export default function Mint() {
     const calculateCost = async (n) => (await getCost()) * n
 
     async function getCost() {
-        return await NFTCost({ onError: (error) => console.log(error) })
+        let cost = await NFTCost({ onError: (error) => console.log(error) })
+        return cost
     }
 
     return (

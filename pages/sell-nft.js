@@ -34,9 +34,8 @@ export default function Home() {
             },
         }
 
-        await runContractFunction({
+        const tx = await runContractFunction({
             params: approveOptions,
-            onSuccess: () => handleApproveSuccess(nftAddress, tokenId, price),
             onError: (error) => {
                 dispatch({
                     type: "error",
@@ -46,6 +45,8 @@ export default function Home() {
                 console.log(error)
             },
         })
+        await tx.wait(1)
+        handleApproveSuccess(nftAddress, tokenId, price)
     }
 
     async function handleApproveSuccess(nftAddress, tokenId, price) {
@@ -134,27 +135,29 @@ export default function Home() {
                 title="Sell your NFT!"
                 id="Main Form"
             />
-            <div>Withdraw {proceeds} proceeds</div>
-            {proceeds != "0" ? (
-                <Button
-                    onClick={() => {
-                        runContractFunction({
-                            params: {
-                                abi: nftMarketplaceAbi,
-                                contractAddress: marketplaceAddress,
-                                functionName: "withdrawProceeds",
-                                params: {},
-                            },
-                            onError: (error) => console.log(error),
-                            onSuccess: () => handleWithdrawSuccess,
-                        })
-                    }}
-                    text="Withdraw"
-                    type="button"
-                />
-            ) : (
-                <div>No proceeds detected</div>
-            )}
+            <div className="p-4">
+                <div>Withdraw {proceeds} proceeds</div>
+                {proceeds != "0" ? (
+                    <Button
+                        onClick={() => {
+                            runContractFunction({
+                                params: {
+                                    abi: nftMarketplaceAbi,
+                                    contractAddress: marketplaceAddress,
+                                    functionName: "withdrawProceeds",
+                                    params: {},
+                                },
+                                onError: (error) => console.log(error),
+                                onSuccess: () => handleWithdrawSuccess,
+                            })
+                        }}
+                        text="Withdraw"
+                        type="button"
+                    />
+                ) : (
+                    <div>No proceeds detected</div>
+                )}
+            </div>
         </div>
     )
 }

@@ -40,7 +40,7 @@ export default function JumpForm() {
                 displayNotification(error, "error")
             },
             onSuccess: () => {
-                displayNotification("Successfully claimed ${earned}!", "success")
+                displayNotification(`Successfully claimed ${earned}!`, "success")
             },
         })
     }

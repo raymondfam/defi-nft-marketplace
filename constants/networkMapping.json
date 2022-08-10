@@ -1,0 +1,17 @@
+{
+    "4": {
+        "NftMarketplace": ["0xd68659713d345E640e9fc408cbf8187def41793b"],
+        "BasicNFT": ["0xB34DfE4a6365b95a8aE6EE51092d62FEB351Ab1F"],
+        "Achiever": ["0xCc9EFF5C3eA0F653f48349091d8ffE096fa341C0"],
+        "WETH": ["0xc778417E063141139Fce010982780140Aa0cD5Ab"],
+        "Mutuals": ["0xC1C0f2901C27d2CAD9F17b65D942162DAA36A023"]
+    },
+    "5": {
+        "NftMarketplace": ["0xd68659713d345E640e9fc408cbf8187def41793b"],
+        "BasicNFT": ["0xB34DfE4a6365b95a8aE6EE51092d62FEB351Ab1F"],
+        "Achiever": ["0x593c86060302615698B54443Cd7E7E7Cd06d1C1e"],
+        "WETH": ["0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6"],
+        "Mutuals": ["0x18B4c7C0281E8F19be9Dad2977356064fe8DB86d"]
+    },
+    "31337": { "NftMarketplace": ["0x5FbDB2315678afecb367f032d93F642f64180aa3"] }
+}

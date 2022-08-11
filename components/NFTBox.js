@@ -128,7 +128,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
         return (
             <div className={style}>
                 {isOwnedByUser ? (
-                    <div className="flex flex-col p-1.5 text-black font-bold edit">
+                    <div className="flex flex-col text-black font-bold edit">
                         <div
                             className="flex items-center gap-2"
                             onClick={() => {
@@ -136,7 +136,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                                 toggleOptionsShowing(select)
                             }}
                         >
-                            <Cog fontSize="15px" /> <p>Edit</p>
+                            <Cog fontSize="15px" /> <span>Edit</span>
                         </div>
                         <div
                             className="hidden flex-col select absolute z-10 top-12 bg-white rounded-md options"

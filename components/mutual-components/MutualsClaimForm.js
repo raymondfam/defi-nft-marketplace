@@ -1,15 +1,14 @@
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import { wethAbi, wethAddress, mutualsAbi, mutualsAddress } from "../../constants"
-// import { useNotification } from "web3uikit"
+import { useNotification } from "web3uikit"
 import { Button } from "@mui/material"
 import { ethers } from "ethers"
 import { useState, useEffect } from "react"
 import CssBaseline from "@mui/material/CssBaseline"
-
 export default function JumpForm() {
     const { address, account, isWeb3Enabled } = useMoralis()
     const { runContractFunction } = useWeb3Contract()
-    // const dispatch = useNotification()
+    const dispatch = useNotification()
 
     let rewardsOptions = {
         abi: mutualsAbi,
@@ -26,27 +25,27 @@ export default function JumpForm() {
         },
     })
 
-    // function displayNotification(title, type) {
-    //     dispatch({
-    //         type: type,
-    //         title: title,
-    //         position: "topR",
-    //     })
-    // }
+    function displayNotification(title, type) {
+        dispatch({
+            type: type,
+            title: title,
+            position: "topR",
+        })
+    }
 
     let [earned, setEarned] = useState("")
     async function handleSubmit() {
-        // const tx = await runContractFunction({
-        //     params: rewardsOptions,
-        //     onError: (error) => {
-        //         console.log(error)
-        //         displayNotification(error.message, "error")
-        //         return error
-        //     },
-        //     onSuccess: () => {
-        //         displayNotification(`Successfully claimed ${earned}!`, "success")
-        //     },
-        // })
+        const tx = await runContractFunction({
+            params: rewardsOptions,
+            onError: (error) => {
+                console.log(error)
+                displayNotification(error.message, "error")
+                return error
+            },
+            onSuccess: () => {
+                displayNotification(`Successfully claimed ${earned}!`, "success")
+            },
+        })
     }
     const setRewardsEarned = async () => {
         let balance = await getEarningsBalance()

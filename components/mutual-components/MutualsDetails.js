@@ -102,17 +102,18 @@ export default function MutualsDetails() {
         setTotalLPBalance(formattedTotalLPBalance)
     }
 
-    return (
-        <div className="flex flex-col p-4">
-            <div>Your ACH Balance: {achBalance}</div>
-            <div>Your WETH Balance: {wethBalance}</div>
-            <div>
-                Your LP Shares: <span className="lp font-semibold">{lpBalance}</span>
-            </div>
-            <div>Contract LP Shares: {totalLPBalance}</div>
-            <div>
-                Rewards Earned: <span className="rewards font-semibold">{earningsBalance}</span>
-            </div>
-        </div>
-    )
+    // return (
+    //     <div className="flex flex-col p-4">
+    //         <div>Your ACH Balance: {achBalance}</div>
+    //         <div>Your WETH Balance: {wethBalance}</div>
+    //         <div>
+    //             Your LP Shares: <span className="lp font-semibold">{lpBalance}</span>
+    //         </div>
+    //         <div>Contract LP Shares: {totalLPBalance}</div>
+    //         <div>
+    //             Rewards Earned: <span className="rewards font-semibold">{earningsBalance}</span>
+    //         </div>
+    //     </div>
+    // )
+    return { earningsBalance, lpBalance, totalLPBalance, achBalance, wethBalance }
 }

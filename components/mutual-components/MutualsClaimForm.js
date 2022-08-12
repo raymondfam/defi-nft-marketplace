@@ -4,8 +4,9 @@ import { useNotification } from "web3uikit"
 import { Button } from "@mui/material"
 import { ethers } from "ethers"
 import { useState, useEffect } from "react"
+import MutualsDetails from "./MutualsDetails"
 export default function JumpForm() {
-    const { address, account, isWeb3Enabled } = useMoralis()
+    // const { address, account, isWeb3Enabled } = useMoralis()
     const { runContractFunction } = useWeb3Contract()
     const dispatch = useNotification()
 
@@ -15,14 +16,14 @@ export default function JumpForm() {
         functionName: "getReward",
     }
 
-    const { runContractFunction: getEarningsBalance } = useWeb3Contract({
-        abi: mutualsAbi,
-        contractAddress: mutualsAddress,
-        functionName: "earned",
-        params: {
-            account: account,
-        },
-    })
+    // const { runContractFunction: getEarningsBalance } = useWeb3Contract({
+    //     abi: mutualsAbi,
+    //     contractAddress: mutualsAddress,
+    //     functionName: "earned",
+    //     params: {
+    //         account: account,
+    //     },
+    // })
 
     function displayNotification(title, type) {
         dispatch({
@@ -31,44 +32,46 @@ export default function JumpForm() {
             position: "topR",
         })
     }
+    let details = MutualsDetails()
+    let earned = details.earningsBalance
+    console.log(earned)
 
-    let [earned, setEarned] = useState("")
     async function handleSubmit() {
+        setIsDisabled(true)
         await runContractFunction({
             params: rewardsOptions,
             onError: (error) => {
                 console.log(error)
                 displayNotification(error.message, "error")
+                setIsDisabled(false)
                 return error
             },
             onSuccess: () => {
+                setIsDisabled(false)
                 displayNotification(`Successfully claimed ${earned}!`, "success")
             },
         })
     }
-    const setRewardsEarned = async () => {
-        let balance = await getEarningsBalance()
-        setEarned(ethers.utils.formatEther(balance).toString())
-    }
+    let [isDisabled, setIsDisabled] = useState(false)
     useEffect(() => {
-        if (isWeb3Enabled && account) {
-            setRewardsEarned()
-        }
-    }, [account, isWeb3Enabled])
+        if (!Number(earned)) setIsDisabled(true)
+        else setIsDisabled(false)
+    }, [earned])
     return (
         <div className="shadow-xl rounded-xl p-8 px-12">
             <h3 className="font-bold text-2xl mb-4 text-slate-500">Claim Rewards</h3>
-            <Button
-                className="p-2 my-3"
-                variant="contained"
-                onClick={handleSubmit}
-                disabled={!Number(earned) ? true : false}
-            >
-                Claim rewards
-            </Button>
             <p className=" text-lg">
                 Rewards Earned: <span className="font-semibold">{earned}</span>
             </p>
+            <Button
+                className="p-2 my-3 rounded-lg"
+                variant="contained"
+                size="large"
+                onClick={handleSubmit}
+                disabled={isDisabled}
+            >
+                Claim rewards
+            </Button>
         </div>
     )
 }

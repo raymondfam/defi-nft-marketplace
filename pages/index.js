@@ -28,7 +28,6 @@ export default function Home() {
                 <JumpForm />
                 <MutualsClaimForm />
             </div>
-            <MutualsDetails />
         </div>
     )
 }

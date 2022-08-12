@@ -177,7 +177,7 @@ export default function MutualsSwapForm() {
                 </div>
                 <Button
                     variant="contained"
-                    className="w-20 rounded-lg"
+                    className="max-w-[110px] rounded-lg p-2"
                     type="submit"
                     onClick={handleSwapSubmit}
                     disabled={isDisabled}

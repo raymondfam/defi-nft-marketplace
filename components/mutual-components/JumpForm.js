@@ -87,7 +87,7 @@ export default function JumpForm() {
                 </div>
                 <Button
                     variant="contained"
-                    className="w-20 rounded-lg"
+                    className="max-w-[110px] rounded-lg p-2"
                     type="submit"
                     onClick={handleSubmit}
                     disabled={isDisabled}

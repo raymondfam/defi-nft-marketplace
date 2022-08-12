@@ -10,7 +10,8 @@ import {
 import { useNotification } from "web3uikit"
 import { ethers } from "ethers"
 import { useState } from "react"
-import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material"
+import { TextField, Select, MenuItem, FormControl, InputLabel } from "@mui/material"
+import { LoadingButton } from "@mui/lab"
 import MutualsDetails from "./MutualsDetails"
 
 export default function MutualsSwapForm() {
@@ -37,7 +38,7 @@ export default function MutualsSwapForm() {
 
     const [swapResult, setSwapResult] = useState("0")
     const [tokenSelected, setTokenSelected] = useState("")
-    const [isDisabled, setIsDisabled] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const details = MutualsDetails()
 
@@ -69,12 +70,11 @@ export default function MutualsSwapForm() {
         e.preventDefault()
         let approveOptions
         const amountToApprove = document.querySelector("#swap-amount").value
-        if (amountToApprove <= 0) {
-            setIsDisabled(false)
+        if (amountToApprove <= 0 || !tokenSelected) {
+            setIsLoading(false)
             return
         }
-
-        setIsDisabled(true)
+        setIsLoading(true)
 
         const formattedAmount = ethers.utils.parseUnits(amountToApprove, "ether").toString()
         if (tokenSelected == "WETH") {
@@ -94,11 +94,13 @@ export default function MutualsSwapForm() {
             params: approveOptions,
             onError: (error) => {
                 console.log(error)
-                dispatch({ title: error.message, type: "error", position: "topR" })
-                setIsDisabled(false)
+                setIsLoading(false)
             },
         })
-        if (!tx) return
+        if (!tx) {
+            setIsLoading(false)
+            return
+        }
         await tx.wait(1)
         handleApproveSuccess(approveOptions.contractAddress, formattedAmount)
     }
@@ -107,12 +109,16 @@ export default function MutualsSwapForm() {
             _amountIn: amountToSwapFormatted,
             _tokenIn: contractAddress,
         }
+
         console.log(`Swapping ${swapOptions.params._amountIn} ...`)
         const tx = await runContractFunction({
             params: swapOptions,
             onSuccess: () =>
                 dispatch({ title: "Successfully Swapped", type: "success", position: "topR" }),
         })
+        setIsLoading(false)
+        document.querySelector("#swap-amount").value = ""
+        if (!tx) return
         await tx.wait(1)
         console.log("Transaction has confirmed by 1 block")
     }
@@ -147,8 +153,8 @@ export default function MutualsSwapForm() {
     return (
         <div className="shadow-2xl rounded-xl p-8 px-12">
             <h3 className="font-bold text-2xl mb-4 text-slate-500">Let's swap!</h3>
-            <form action="" className="flex flex-col gap-6 py-2">
-                <FormControl size="small" className="w-1/2">
+            <div className="flex flex-col gap-6 py-2">
+                <FormControl size="small" className="w-1/2" required>
                     <InputLabel id="select">Select a token</InputLabel>
                     <Select value={tokenSelected} onChange={handleSwapChanged} label="select">
                         <MenuItem value="ACH">ACH</MenuItem>
@@ -175,16 +181,16 @@ export default function MutualsSwapForm() {
                         Your WETH Balance: <span className="font-bold">{details.wethBalance}</span>
                     </div>
                 </div>
-                <Button
+                <LoadingButton
                     variant="contained"
                     className="max-w-[110px] rounded-lg p-2"
                     type="submit"
                     onClick={handleSwapSubmit}
-                    disabled={isDisabled}
+                    loading={isLoading}
                 >
                     Submit
-                </Button>
-            </form>
+                </LoadingButton>
+            </div>
         </div>
     )
 }

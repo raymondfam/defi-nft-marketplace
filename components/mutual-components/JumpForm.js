@@ -4,7 +4,8 @@ import { useNotification } from "web3uikit"
 import { ethers } from "ethers"
 import { useEffect, useState } from "react"
 import MutualsDetails from "./MutualsDetails"
-import { TextField, FormControl, Button } from "@mui/material"
+import { TextField, Button } from "@mui/material"
+import { LoadingButton } from "@mui/lab"
 export default function JumpForm() {
     const { runContractFunction } = useWeb3Contract()
     const dispatch = useNotification()
@@ -14,7 +15,7 @@ export default function JumpForm() {
         functionName: "removeLiquidity",
     }
 
-    const [isDisabled, setIsDisabled] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     function displayNotification(title, type) {
         dispatch({
@@ -31,11 +32,11 @@ export default function JumpForm() {
     let [LPShares, contractLPShares] = getLPShares()
 
     async function handleSubmit() {
-        setIsDisabled(true)
+        setIsLoading(true)
         let removeAmount = document.querySelector("#amount-to-remove").value
         if (removeAmount <= 0 || removeAmount > LPShares) {
-            setIsDisabled(false)
-            displayNotification("Error: Invalid amount", "error")
+            setIsLoading(false)
+            return
         }
         let removeAmountInWei = ethers.utils.parseUnits(removeAmount, "ether").toString()
         removeLiquidityOptions.params = {
@@ -46,7 +47,9 @@ export default function JumpForm() {
             onError: (error) => displayNotification(error.message, "error"),
             onSuccess: () => displayNotification(`Removed ${removeAmount} LP shares`, "success"),
         })
+        setIsLoading(false)
     }
+
     const setMax = () => {
         let textField = document.querySelector("#amount-to-remove")
         textField.focus()
@@ -56,14 +59,14 @@ export default function JumpForm() {
     return (
         <div className="shadow-xl rounded-xl p-8 px-12">
             <h3 className="font-bold text-2xl mb-4 text-slate-500">Remove Liquidity</h3>
-            <form action="" className="flex flex-col gap-6 py-2">
+            <div className="flex flex-col gap-6 py-2">
                 <div className="flex gap-1">
                     <TextField
                         className="w-1/2"
                         id="amount-to-remove"
                         size="small"
                         type="number"
-                        required={true}
+                        required
                         label="Amount to remove"
                         onChange={(e) => {
                             if (e.target.value < 0) e.target.value = 0
@@ -85,16 +88,16 @@ export default function JumpForm() {
                     <br></br>
                     Contract LP Shares: <span className="font-bold">{contractLPShares}</span>
                 </div>
-                <Button
+                <LoadingButton
                     variant="contained"
                     className="max-w-[110px] rounded-lg p-2"
                     type="submit"
                     onClick={handleSubmit}
-                    disabled={isDisabled}
+                    loading={isLoading}
                 >
                     Submit
-                </Button>
-            </form>
+                </LoadingButton>
+            </div>
         </div>
     )
 }

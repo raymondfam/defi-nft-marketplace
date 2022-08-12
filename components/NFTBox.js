@@ -143,8 +143,8 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                             id={tokenId}
                         >
                             <button
-                                className="flex gap-2 justify-end items-center hover:bg-slate-200 p-3 rounded-md"
-                                onClick={(e) => {
+                                className="flex gap-2 justify-end items-center hover:bg-slate-200 p-3 rounded-md border-transparent"
+                                onClick={() => {
                                     const select = document.getElementById(tokenId)
                                     toggleOptionsShowing(select)
                                     setShowUpdateModal(true)
@@ -154,7 +154,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                                 Update Listing
                             </button>
                             <button
-                                className="flex gap-1 hover:bg-slate-200 p-3 rounded-md"
+                                className="flex items-center gap-1 hover:bg-slate-200 p-3 rounded-md border-transparent"
                                 onClick={() => {
                                     const select = document.getElementById(tokenId)
                                     toggleOptionsShowing(select)

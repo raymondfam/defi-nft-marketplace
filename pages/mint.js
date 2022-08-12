@@ -93,7 +93,7 @@ export default function Mint() {
         <div className="flex flex-col items-center px-9">
             <div className="flex flex-col gap-2">
                 <h3 className="font-bold text-2xl my-4 text-slate-500">Mint an NFT</h3>
-                <FormControl variant="standard" id="fart">
+                <FormControl variant="standard">
                     <InputLabel id="select">Amount to mint</InputLabel>
                     <Select
                         label="select"

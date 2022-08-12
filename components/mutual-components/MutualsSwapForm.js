@@ -7,9 +7,10 @@ import {
     achieverAbi,
     achieverAddress,
 } from "../../constants"
-import { Form, useNotification } from "web3uikit"
+import { useNotification } from "web3uikit"
 import { ethers } from "ethers"
 import { useState } from "react"
+import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material"
 export default function MutualsSwapForm() {
     const { runContractFunction } = useWeb3Contract()
     const dispatch = useNotification()
@@ -33,7 +34,8 @@ export default function MutualsSwapForm() {
     }
 
     const [swapResult, setSwapResult] = useState("0")
-
+    const [tokenSelected, setTokenSelected] = useState("")
+    const [isDisabled, setIsDisabled] = useState(false)
     const { runContractFunction: getReserve0 } = useWeb3Contract({
         abi: mutualsAbi,
         contractAddress: mutualsAddress,
@@ -58,20 +60,15 @@ export default function MutualsSwapForm() {
     //     },
     // })
 
-    async function handleSwapSubmit() {
-        let selectVal = document.querySelector("#swap-form select").value
+    async function handleSwapSubmit(e) {
+        e.preventDefault()
         let approveOptions
-        const amountToApprove = document.querySelector("#input_1").value
-        if (amountToApprove <= 0) {
-            dispatch({
-                title: "Value must be greater than zero",
-                type: "error",
-                position: "topR",
-            })
-            return
-        }
+        const amountToApprove = document.querySelector("#swap-amount").value
+        if (amountToApprove <= 0) return
+        setIsDisabled(true)
+
         const formattedAmount = ethers.utils.parseUnits(amountToApprove, "ether").toString()
-        if (selectVal == "WETH") {
+        if (tokenSelected == "WETH") {
             wethApproveOptions.params = {
                 wad: formattedAmount,
                 guy: mutualsAddress,
@@ -91,6 +88,7 @@ export default function MutualsSwapForm() {
                 dispatch({ title: error.message, type: "error", position: "topR" })
             },
         })
+        if (!tx) return
         await tx.wait(1)
         handleApproveSuccess(approveOptions.contractAddress, formattedAmount)
     }
@@ -103,79 +101,68 @@ export default function MutualsSwapForm() {
         console.log(`Swapping ${swapOptions.params._amountIn} ...`)
         const tx = await runContractFunction({
             params: swapOptions,
+            onSuccess: () =>
+                dispatch({ title: "Successfully Swapped", type: "success", position: "topR" }),
         })
         await tx.wait(1)
+
         console.log("Transaction has confirmed by 1 block")
     }
 
     async function handleSwapChanged(data) {
-        if (data.target.tagName == "SELECT") {
-            let swapAmount = document.querySelector("label[for=input_1]")
-            swapAmount.textContent = `Amount to swap (in ${data.target.value})`
+        const SWAP_AMOUNT = document.querySelector("#swap-amount")
+        if (isNaN(data.target.value)) {
+            SWAP_AMOUNT.value = ""
+            setSwapResult(0)
+            setTokenSelected(data.target.value)
         } else {
-            let tokenSelected = document.querySelector("#swap-form select").value
-            let array =
-                tokenSelected == "WETH"
-                    ? [
-                          ethers.utils.formatEther(
-                              await getReserve0({ onError: (error) => console.log(error) })
-                          ),
-                          ethers.utils.formatEther(
-                              await getReserve1({ onError: (error) => console.log(error) })
-                          ),
-                      ]
-                    : [
-                          ethers.utils.formatEther(
-                              await getReserve1({ onError: (error) => console.log(error) })
-                          ),
-                          ethers.utils.formatEther(
-                              await getReserve0({ onError: (error) => console.log(error) })
-                          ),
-                      ]
-            let [reserveIn, reserveOut] = array
-            let amountInWithFee = (data.target.value * 997) / 1000
-            let amountOut = (+reserveOut * amountInWithFee) / (+reserveIn + amountInWithFee)
-            setSwapResult(amountOut)
+            setSwapResult(await getTokenSwapAmount(SWAP_AMOUNT.value))
         }
     }
+
+    async function getTokenSwapAmount(amount) {
+        if (!tokenSelected) return 0
+        const RESERVE0 = ethers.utils.formatEther(await getReserve0())
+        const RESERVE1 = ethers.utils.formatEther(await getReserve1())
+        let tokenReserve = null
+        if (tokenSelected == "ACH") tokenReserve = [RESERVE0, RESERVE1]
+        else tokenReserve = [RESERVE1, RESERVE0]
+        let [reserveIn, reserveOut] = tokenReserve
+        let amountInWithFee = (amount * 997) / 1000
+        let amountOut = (+reserveOut * amountInWithFee) / (+reserveIn + amountInWithFee)
+        return amountOut
+    }
     return (
-        <div className="shadow-2xl rounded-xl p-4">
-            <Form
-                onSubmit={handleSwapSubmit}
-                onChange={handleSwapChanged}
-                id="swap-form"
-                data={[
-                    {
-                        selectOptions: [
-                            {
-                                id: "ACH",
-                                label: "ACH",
-                            },
-                            {
-                                id: "WETH",
-                                label: "WETH",
-                            },
-                        ],
-                        name: "Select token to swap",
-                        type: "select",
-                        value: "",
-                    },
-                    {
-                        inputWidth: "50%",
-                        name: "Amount to swap",
-                        type: "number",
-                        value: "",
-                        key: "amountToSwap",
-                        validation: { required: true },
-                    },
-                    {
-                        value: `Corresponding Token Out: ${swapResult}`,
-                        type: "box",
-                        key: "swap-result",
-                    },
-                ]}
-                title="Let's swap!"
-            ></Form>
+        <div className="shadow-2xl rounded-xl p-8 px-12">
+            <h3 className="font-bold text-2xl mb-4 text-slate-500">Claim Rewards</h3>
+            <form action="" className="flex flex-col gap-10">
+                <FormControl size="small" className="w-1/2">
+                    <InputLabel id="select">Select a token</InputLabel>
+                    <Select value={tokenSelected} onChange={handleSwapChanged} label="select">
+                        <MenuItem value="">None</MenuItem>
+                        <MenuItem value="ACH">ACH</MenuItem>
+                        <MenuItem value="WETH">WETH</MenuItem>
+                    </Select>
+                </FormControl>
+                <TextField
+                    className="w-1/2"
+                    id="swap-amount"
+                    label="Amount to swap"
+                    size="small"
+                    onChange={handleSwapChanged}
+                    required
+                />
+                <div className="text-xl">Token Out: {swapResult}</div>
+                <Button
+                    variant="contained"
+                    className="w-20 rounded-lg"
+                    type="submit"
+                    onClick={handleSwapSubmit}
+                    disabled={isDisabled}
+                >
+                    Submit
+                </Button>
+            </form>
         </div>
     )
 }

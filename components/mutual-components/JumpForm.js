@@ -62,7 +62,7 @@ export default function JumpForm() {
             <div className="flex flex-col gap-6 py-2">
                 <div className="flex gap-1">
                     <TextField
-                        className="w-1/2"
+                        className="w-1/2 min-w-[180px]"
                         id="amount-to-remove"
                         size="small"
                         type="number"

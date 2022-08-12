@@ -153,23 +153,23 @@ export default function MutualsSwapForm() {
     return (
         <div className="shadow-2xl rounded-xl p-8 px-12">
             <h3 className="font-bold text-2xl mb-4 text-slate-500">Let's swap!</h3>
-            <div className="flex flex-col gap-6 py-2">
-                <FormControl size="small" className="w-1/2" required>
+            <div className="flex flex-col gap-5 py-2">
+                <FormControl size="small" className="w-1/2 min-w-[180px] flex gap-6">
                     <InputLabel id="select">Select a token</InputLabel>
                     <Select value={tokenSelected} onChange={handleSwapChanged} label="select">
                         <MenuItem value="ACH">ACH</MenuItem>
                         <MenuItem value="WETH">WETH</MenuItem>
                     </Select>
+                    <TextField
+                        id="swap-amount"
+                        label="Amount to swap"
+                        size="small"
+                        onChange={handleSwapChanged}
+                        type="number"
+                        required
+                    />
                 </FormControl>
-                <TextField
-                    className="w-1/2"
-                    id="swap-amount"
-                    label="Amount to swap"
-                    size="small"
-                    onChange={handleSwapChanged}
-                    type="number"
-                    required
-                />
+
                 <div className="info text-lg">
                     <p>
                         Corresponding Token Out: <span className="font-bold"> {swapResult}</span>

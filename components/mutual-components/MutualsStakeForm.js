@@ -127,32 +127,32 @@ export default function MutualsStakeForm() {
     return (
         <div className="shadow-2xl rounded-xl p-8 px-12">
             <h3 className="font-bold text-2xl mb-4 text-slate-500">Let's Stake!</h3>
-            <FormControl className="flex flex-col gap-6 py-2">
-                <TextField
-                    className="w-1/2"
-                    id="Token0"
-                    label="Amount to stake (in ACH)"
-                    size="small"
-                    onChange={handleChange}
-                    type="number"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    required
-                />
-                <TextField
-                    className="w-1/2"
-                    id="Token1"
-                    label="Amount to stake (in WETH)"
-                    size="small"
-                    onChange={handleChange}
-                    type="number"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    required
-                />
-                <div>
+            <div className="flex flex-col gap-6 py-2">
+                <FormControl className="w-1/2 min-w-[180px] flex gap-6">
+                    <TextField
+                        id="Token0"
+                        label="Amount to stake (in ACH)"
+                        size="small"
+                        onChange={handleChange}
+                        type="number"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        required
+                    />
+                    <TextField
+                        id="Token1"
+                        label="Amount to stake (in WETH)"
+                        size="small"
+                        onChange={handleChange}
+                        type="number"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        required
+                    />
+                </FormControl>
+                <div className="text-lg">
                     <div>
                         Your ACH Balance:
                         <span className="font-bold"> {details.achBalance}</span>
@@ -173,7 +173,7 @@ export default function MutualsStakeForm() {
                 >
                     stake token
                 </LoadingButton>
-            </FormControl>
+            </div>
         </div>
     )
 }
